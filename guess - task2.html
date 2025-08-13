@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Number Guessing Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      padding: 30px;
+      display: flex;
+      justify-content: center;
+    }
+    .game-container {
+      background: white;
+      padding: 25px 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+    #guess-input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      font-size: 1em;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 15px;
+      padding: 12px 0;
+      width: 100%;
+      font-size: 1.1em;
+      border: none;
+      border-radius: 6px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #feedback {
+      margin-top: 20px;
+      font-size: 1.2em;
+      min-height: 24px;
+      color: #444;
+    }
+    #attempts {
+      margin-top: 12px;
+      font-size: 1em;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>Number Guessing Game</h1>
+    <p>Guess a number between <span id="min-num">1</span> and <span id="max-num">50</span>.</p>
+
+    <input type="number" id="guess-input" placeholder="Enter your guess" />
+    <button id="guess-btn">Guess</button>
+
+    <div id="feedback"></div>
+    <div id="attempts"></div>
+    <button id="restart-btn" style="display:none;">Restart Game</button>
+  </div>
+
+  <script>
+    const minNumber = 1;
+    const maxNumber = 50;
+    let randomNumber;
+    let attempts;
+
+    const guessInput = document.getElementById("guess-input");
+    const guessBtn = document.getElementById("guess-btn");
+    const feedback = document.getElementById("feedback");
+    const attemptsDiv = document.getElementById("attempts");
+    const restartBtn = document.getElementById("restart-btn");
+    const minNumSpan = document.getElementById("min-num");
+    const maxNumSpan = document.getElementById("max-num");
+
+    minNumSpan.textContent = minNumber;
+    maxNumSpan.textContent = maxNumber;
+
+    function startGame() {
+      randomNumber = Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber;
+      attempts = 0;
+      feedback.textContent = "";
+      attemptsDiv.textContent = "";
+      guessBtn.disabled = false;
+      guessInput.disabled = false;
+      guessInput.value = "";
+      guessInput.placeholder = `Enter your guess`;
+      restartBtn.style.display = "none";
+      guessInput.focus();
+    }
+
+    guessBtn.addEventListener("click", () => {
+      const guessValue = parseInt(guessInput.value);
+
+      if (isNaN(guessValue) || guessValue < minNumber || guessValue > maxNumber) {
+        feedback.textContent = `Please enter a valid number between ${minNumber} and ${maxNumber}.`;
+        return;
+      }
+
+      attempts++;
+
+      if (guessValue === randomNumber) {
+        feedback.textContent = `🎉 You guessed it right! The number was ${randomNumber}.`;
+        attemptsDiv.textContent = `Total attempts: ${attempts}`;
+        guessBtn.disabled = true;
+        guessInput.disabled = true;
+        restartBtn.style.display = "block";
+      } else if (guessValue < randomNumber) {
+        feedback.textContent = "Too low!";
+      } else {
+        feedback.textContent = "Too high!";
+      }
+
+      attemptsDiv.textContent = `Attempts so far: ${attempts}`;
+      guessInput.value = "";
+      guessInput.focus();
+    });
+
+    restartBtn.addEventListener("click", () => {
+      startGame();
+    });
+
+    startGame();
+  </script>
+</body>
+</html>
