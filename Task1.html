@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Temperature Converter</title>
+  <style>
+    body {
+      font-family: Verdana, sans-serif;
+      background: #e3f2fd;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+    .converter {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 320px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #0d47a1;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #0d47a1;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 6px;
+      font-size: 1em;
+      border-radius: 5px;
+      border: 1px solid #bbb;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 10px;
+      font-size: 1.1em;
+      background-color: #0d47a1;
+      color: white;
+      border: none;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #08306b;
+    }
+    #message {
+      margin-top: 15px;
+      font-size: 1em;
+      color: red;
+      text-align: center;
+      min-height: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <div class="converter">
+    <h2>Temperature Converter</h2>
+
+    <label for="celsius">Celsius (°C):</label>
+    <input type="number" id="celsius" placeholder="Enter Celsius temperature" />
+
+    <label for="fahrenheit">Fahrenheit (°F):</label>
+    <input type="number" id="fahrenheit" placeholder="Enter Fahrenheit temperature" />
+
+    <label for="kelvin">Kelvin (K):</label>
+    <input type="number" id="kelvin" placeholder="Enter Kelvin temperature" />
+
+    <button id="convertBtn">Convert</button>
+    <div id="message"></div>
+  </div>
+
+  <script>
+   
+    function clearOthers(exceptId) {
+      ['celsius', 'fahrenheit', 'kelvin'].forEach(id => {
+        if (id !== exceptId) {
+          document.getElementById(id).value = '';
+        }
+      });
+      document.getElementById('message').textContent = '';
+    }
+
+    ['celsius', 'fahrenheit', 'kelvin'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => clearOthers(id));
+    });
+
+    document.getElementById('convertBtn').addEventListener('click', () => {
+      const c = document.getElementById('celsius').value.trim();
+      const f = document.getElementById('fahrenheit').value.trim();
+      const k = document.getElementById('kelvin').value.trim();
+      const message = document.getElementById('message');
+
+      message.textContent = '';
+
+      const filled = [c, f, k].filter(v => v !== '').length;
+
+      if (filled === 0) {
+        message.textContent = 'Please enter a temperature in one field.';
+        return;
+      }
+      if (filled > 1) {
+        message.textContent = 'Please enter temperature in only one field at a time.';
+        return;
+      }
+
+      if (c !== '') {
+        const celsius = parseFloat(c);
+        if (isNaN(celsius)) {
+          message.textContent = 'Invalid Celsius temperature.';
+          return;
+        }
+        const fahrenheit = (celsius * 9 / 5) + 32;
+        const kelvin = celsius + 273.15;
+
+        document.getElementById('fahrenheit').value = fahrenheit.toFixed(2);
+        document.getElementById('kelvin').value = kelvin.toFixed(2);
+      } else if (f !== '') {
+        const fahrenheit = parseFloat(f);
+        if (isNaN(fahrenheit)) {
+          message.textContent = 'Invalid Fahrenheit temperature.';
+          return;
+        }
+        const celsius = (fahrenheit - 32) * 5 / 9;
+        const kelvin = celsius + 273.15;
+
+        document.getElementById('celsius').value = celsius.toFixed(2);
+        document.getElementById('kelvin').value = kelvin.toFixed(2);
+      } else if (k !== '') {
+        const kelvin = parseFloat(k);
+        if (isNaN(kelvin)) {
+          message.textContent = 'Invalid Kelvin temperature.';
+          return;
+        }
+        const celsius = kelvin - 273.15;
+        const fahrenheit = (celsius * 9 / 5) + 32;
+
+        document.getElementById('celsius').value = celsius.toFixed(2);
+        document.getElementById('fahrenheit').value = fahrenheit.toFixed(2);
+      }
+    });
+  </script>
+</body>
+</html>
